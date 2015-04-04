@@ -1,0 +1,59 @@
+Blue <- hardware.pin7;
+Red <- hardware.pin8;
+Yellow <- hardware.pin9;
+Green <- hardware.pin5;
+Blue.configure(DIGITAL_OUT);
+Red.configure(DIGITAL_OUT);
+Yellow.configure(DIGITAL_OUT);
+Green.configure(DIGITAL_OUT);
+
+function TestMessage (m)
+ {
+     server.log(m);
+     if (m.find("Test")!=null) { 
+        resetLights();
+        Blue.write(1);
+     }
+    else if (m.find("Error")!=null) { 
+        resetLights();
+        Red.write(1);
+     }
+     else if (m.find("Test")!=null) { 
+        resetLights();
+        blue.write(1);
+     }
+     else if (m.find("Warning")!=null) { 
+        resetLights();
+        Yellow.write(1);
+     }
+    else if (m.find("Completed")!=null) { 
+        resetLights();
+        Green.write(1);
+     }
+    else
+     {
+         Blue.write(1);
+         Red.write(1);
+         Green.write(1);
+         Yellow.write(1);
+     }
+     
+     
+ }
+
+
+function resetLights ()
+{
+Blue.write(0);
+Red.write(0);
+Green.write(0);
+Yellow.write(0);
+//imp.wakeup(10, resetLights);
+}
+
+
+resetLights();
+
+
+
+agent.on("TestMessage", TestMessage);

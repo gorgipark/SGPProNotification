@@ -1,0 +1,74 @@
+
+//=========================================================================================
+//=========================================================================================
+
+
+
+ function requestHandler(request, response) {
+
+  local rP= "OK"; 
+  try {
+      
+      
+  if (request.method=="POST")
+  {
+     parseMessage(request.body);
+     rP ="Message Revceived"
+   }
+    
+    // send a response back saying everything was OK.
+    response.send(200, rP);
+  } 
+catch (ex) 
+  {
+    response.send(500, "Internal Server Error: " + ex);
+  }
+}
+ 
+// register the HTTP handler
+http.onrequest(requestHandler);
+
+ //=========================================================================================
+ //=========================================================================================
+
+function connectionroutine ()
+{
+     server.log("SGP LISTENER ON");
+}
+ //=========================================================================================
+
+function disconnectionroutine ()
+{
+     server.log("SGP LISTENER OFF");
+}
+//=========================================================================================
+function parseMessage(msg)
+{
+ local equal_sign = "=";
+ local ampersand = "&";
+ local  i =0;
+ local m=msg;
+ 
+ while (m.len()>0)
+  {
+      local begin_field= m.find (equal_sign);
+      if (begin_field==null)
+         return;
+      local end_field= m.find (ampersand);
+      if (end_field==null)
+         return;
+         
+      local field = m.slice(0,begin_field)   ;
+      local content = m.slice(begin_field+1,end_field) ;
+      if (field =="subject")
+        {
+         device.send("TestMessage",content);
+        }
+     //server.log (i+"." + field+ "="+ content);
+      i++;
+      m=m.slice(end_field+1.m.len());
+  }
+ 
+       
+}
+//=========================================================================================
